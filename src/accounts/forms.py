@@ -61,6 +61,16 @@ class UserRegisterForm(forms.ModelForm):
         )
 
 
+class UserSendVerificationForm(forms.ModelForm):
+    email = forms.EmailField(label='email')
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'email',
+        )
+
+
 class UserUpdateForm(UserChangeForm):
     avatar = forms.ImageField(required=False, widget=widgets.FileInput())
     birthday = forms.DateField(required=False, widget=widgets.DateInput(attrs={'type': 'date'}))

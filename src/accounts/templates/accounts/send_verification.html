@@ -2,10 +2,10 @@
 
 {% load crispy_forms_filters %}
 
-{% block title %}Password reset{% endblock %}
+{% block title %}Send verification link{% endblock %}
 
 {% block header %}
-    Password reset
+    Send verification link to your email
 {% endblock %}
 
 {% block content %}
@@ -16,8 +16,8 @@
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a class="btn btn-outline-primary" href="{% url 'accounts:login' %}">Back</a>
-                    <input class="btn btn-primary" type="submit" value="Reset password">
+                    <a class="btn btn-outline-success" href="{% url 'accounts:register' %}">Register</a>
+                    <input class="btn btn-primary" type="submit" value="Send">
                 </div>
             </form>
         </div>

@@ -4,13 +4,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView
 from django.contrib.auth.views import LogoutView
 from django.core.signing import BadSignature
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import CreateView, FormView
 from django.views.generic import UpdateView
 
-from .forms import UserRegisterForm, UserUpdateForm, UserPasswordChangeForm
+from .apps import user_register
+from .forms import UserRegisterForm, UserUpdateForm, UserPasswordChangeForm, UserSendVerificationForm
 from .utils import signer
 
 
@@ -19,6 +21,32 @@ class UserRegisterView(CreateView):
     template_name = 'accounts/user_register.html'
     success_url = reverse_lazy('accounts:register_done')
     form_class = UserRegisterForm
+
+
+class UserSendVerificationView(FormView):
+    model = get_user_model()
+    template_name = 'accounts/send_verification.html'
+    success_url = reverse_lazy('accounts:register_done')
+    form_class = UserSendVerificationForm
+
+
+def user_send_verification(request):
+    if request.method == 'GET':
+        form = UserSendVerificationForm()
+    elif request.method == 'POST':
+        form = UserSendVerificationForm(request.POST)
+        if form.is_valid():
+            user = get_object_or_404(get_user_model(), email=form.cleaned_data['email'])
+            user_register.send(get_user_model(), instance=user)
+            return HttpResponseRedirect(reverse('accounts:register_done'))
+
+    return render(
+        request=request,
+        template_name='accounts/send_verification.html',
+        context={
+            'form': form,
+        }
+    )
 
 
 def user_activate(request, sign):
