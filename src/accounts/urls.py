@@ -1,8 +1,7 @@
 from django.urls import path
 from django.views.generic import TemplateView
 
-from .views import UserLoginView, AccountChangePasswordView, AccountChangeDoneView, UserSendVerificationView, \
-    user_send_verification
+from .views import AccountChangeDoneView, AccountChangePasswordView, UserLoginView, user_send_verification
 from .views import UserLogoutView
 from .views import UserProfileUpdateView
 from .views import UserRegisterView
