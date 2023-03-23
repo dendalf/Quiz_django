@@ -1,8 +1,7 @@
-from django.test import SimpleTestCase
-from django.urls import reverse, resolve
+from accounts.views import UserLoginView, UserLogoutView, UserRegisterView, user_activate, user_profile_view, user_send_verification
 
-from accounts.views import UserRegisterView, user_profile_view, user_activate, user_send_verification, UserLoginView, \
-    UserLogoutView
+from django.test import SimpleTestCase
+from django.urls import resolve, reverse
 
 
 class TestUrls(SimpleTestCase):
