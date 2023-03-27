@@ -2,11 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import CreateView, DeleteView
+from django.views.generic import CreateView
 from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
-from django.views.generic.list import MultipleObjectMixin
 
 from .forms import ChoicesFormSet
 from .models import Exam
