@@ -139,12 +139,6 @@ class ExamResultUpdateView(LoginRequiredMixin, UpdateView):
     def get(self, request, *args, **kwargs):
         uuid = kwargs.get('uuid')
         res_uuid = kwargs.get('res_uuid')
-        user = request.user
-
-        result = Result.objects.get(
-            user=user,
-            uuid=res_uuid
-        )
 
         return HttpResponseRedirect(
             reverse(
@@ -152,7 +146,6 @@ class ExamResultUpdateView(LoginRequiredMixin, UpdateView):
                 kwargs={
                     'uuid': uuid,
                     'res_uuid': res_uuid,
-                    # 'order_num': result.current_order_number + 1
                 }
             )
         )
@@ -175,8 +168,3 @@ class ExamResultDeleteView(LoginRequiredMixin, DeleteView):
         )
         self.object.delete()
         return HttpResponseRedirect(success_url)
-
-
-
-
-
