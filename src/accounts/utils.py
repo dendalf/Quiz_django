@@ -7,9 +7,9 @@ signer = Signer()
 
 def send_activation_notification(user):
     if settings.ALLOWED_HOSTS:
-        host = f'http://{settings.ALLOWED_HOSTS[0]}:7000'
+        host = f'http://{settings.ALLOWED_HOSTS[0]}'
     else:
-        host = 'http://localhost:7000'
+        host = 'http://localhost'
 
     context = {'user': user, 'host': host, 'sign': signer.sign(user.username)}
     subject = render_to_string('email/activation_letter_subject.txt', context)
