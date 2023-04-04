@@ -5,7 +5,6 @@ name: 'quiz'
 services:
   web:
     platform: linux/amd64
-    build: .
     container_name: web
     image: denisagarkov/web:0.0.1
     command: gunicorn core.wsgi:application --workers 4 --bind 0.0.0.0:8890
@@ -26,7 +25,6 @@ services:
 
   db:
     platform: linux/amd64
-    build: ./postgres
     container_name: db
     image: denisagarkov/db:0.0.1
     volumes:
@@ -42,7 +40,6 @@ services:
 
   nginx:
     platform: linux/amd64
-    build: ./nginx
     container_name: nginx
     image: denisagarkov/nginx:0.0.1
     volumes:
