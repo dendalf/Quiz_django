@@ -5,6 +5,7 @@ from celery.utils.log import get_task_logger
 
 from django.core.management import call_command
 from django.utils import timezone
+
 from prettytable import PrettyTable
 
 from quiz.models import Result
@@ -36,7 +37,7 @@ def send_email_reminder():
                 result.create_timestamp
             ])
 
-            subj = f'Finish your pending tests!'
+            subj = 'Finish your pending tests!'
             result.user.email_user(subj, tab.get_string())
             stdout.write('The report was sent by the admins email')
 
