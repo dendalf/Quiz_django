@@ -4,3 +4,6 @@ Pillow
 python-dotenv
 psycopg2
 gunicorn
+prettytable
+celery
+redis

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from os import getenv
 from pathlib import Path
 
+from celery.schedules import crontab
+
 from django.urls import reverse_lazy
 
 from dotenv import load_dotenv
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
 
     'accounts.apps.AccountsConfig',
     'quiz.apps.QuizConfig',
+    'long_task.apps.LongTaskConfig',
 
 ]
 
@@ -55,6 +58,7 @@ if DEBUG:
     INSTALLED_APPS.append('django_extensions')
 
 MIDDLEWARE = [
+    # 'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -161,7 +166,40 @@ AUTH_USER_MODEL = 'accounts.User'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_PORT = 1025
-
 LOGIN_REDIRECT_URL = reverse_lazy('index')
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SERVER_EMAIL = 'noreply@test.com'
+ADMINS = [('admin', 'admin@test.com'), ('user', 'user@test.com')]
+EMAIL_SUBJECT_PREFIX = '[QUIZ] '
+
+CELERY_BROKER_URL = getenv('CELERY_BROKER')
+CELERY_RESULT_BACKEND = getenv('CELERY_BACKEND')
+
+CELERY_BEAT_SCHEDULE = {
+    'simple_task': {
+        'task': 'quiz.my_tasks.simple_task',
+        'schedule': crontab(minute='*/1')
+    },
+    'send_email_report': {
+        'task': 'quiz.my_tasks.send_email_report',
+        'schedule': crontab(minute='*/2')
+    },
+    'send_email_reminder': {
+        'task': 'quiz.my_tasks.send_email_reminder',
+        'schedule': crontab(minute='*/2')
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': getenv('CACHE_DB_URL'),
+        'OPTIONS': {
+            'db': '1',
+            'parser_class': 'redis.connection.PythonParser',
+            'pool_class': 'redis.BlockingConnectionPool',
+        },
+        'KEY_PREFIX': 'quiz'
+    }
+}
